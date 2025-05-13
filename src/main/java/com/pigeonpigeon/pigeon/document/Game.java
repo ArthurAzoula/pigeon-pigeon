@@ -49,4 +49,8 @@ public class Game {
     public void start() {
         this.status = GameStatus.IN_PROGRESS;
     }
+
+    public void incrementRound() {
+        this.currentRound++;
+    }
 }

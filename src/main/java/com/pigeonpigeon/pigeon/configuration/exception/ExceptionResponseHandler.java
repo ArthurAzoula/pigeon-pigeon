@@ -43,7 +43,15 @@ public class ExceptionResponseHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(HttpClientErrorException.UnprocessableEntity.class)
     protected ResponseEntity<Object> handleUnprocessable(HttpClientErrorException.UnprocessableEntity ex, WebRequest req) {
+        log.warn("[Pigeon] HttpClientErrorException.UnprocessableEntity occurred: {}", ex.getMessage(), ex);
         var error = new ErrorDetails(LocalDate.now(), HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, req);
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleGenericException(Exception ex, WebRequest req) {
+        log.error("[Pigeon] Exception occurred: {}", ex.getMessage(), ex);
+        var error = new ErrorDetails(LocalDate.now(), HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, req);
     }
 }
