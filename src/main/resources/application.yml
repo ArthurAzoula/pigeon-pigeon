@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: default
+  jpa:
+    open-in-view: false
+  liquibase:
+    change-log: classpath:/liquibase/changelog-master.json
+    enabled: true
+    drop-first: true
+    default-schema: public
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    root: INFO
+    com.pigeonpigeon: DEBUG

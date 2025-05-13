@@ -1,0 +1,4 @@
+databaseChangeLog:
+    - include:
+          file: pigeon-init-1.0.json
+          relativeToChangelogFile: true

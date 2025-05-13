@@ -1,0 +1,544 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "1",
+        "author": "azoulux",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "player",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "uuid",
+                    "defaultValueComputed": "gen_random_uuid()",
+                    "constraints": {
+                      "primaryKey": true,
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "email",
+                    "type": "varchar(100)",
+                    "constraints": {
+                      "nullable": false,
+                      "unique": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "pseudonym",
+                    "type": "varchar(50)",
+                    "constraints": {
+                      "nullable": false,
+                      "unique": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "password",
+                    "type": "varchar(100)",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "defaultValueComputed": "CURRENT_TIMESTAMP"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "2",
+        "author": "azoulux",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "game",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "uuid",
+                    "defaultValueComputed": "gen_random_uuid()",
+                    "constraints": {
+                      "primaryKey": true,
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "code",
+                    "type": "varchar(6)",
+                    "constraints": {
+                      "nullable": false,
+                      "unique": true
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "status",
+                    "type": "varchar(20)",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "current_round",
+                    "type": "int",
+                    "defaultValue": 1
+                  }
+                },
+                {
+                  "column": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "defaultValueComputed": "CURRENT_TIMESTAMP"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "3",
+        "author": "azoulux",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "team",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "uuid",
+                    "defaultValueComputed": "gen_random_uuid()",
+                    "constraints": {
+                      "primaryKey": true,
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "name",
+                    "type": "varchar(50)",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "tokens",
+                    "type": "int",
+                    "defaultValue": 15,
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "game_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "team",
+              "baseColumnNames": "game_id",
+              "referencedTableName": "game",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_team_game"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "4",
+        "author": "azoulux",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "team_player",
+              "columns": [
+                {
+                  "column": { "name": "team_id", "type": "uuid" }
+                },
+                {
+                  "column": { "name": "player_id", "type": "uuid" }
+                },
+                {
+                  "column": { "name": "is_leader", "type": "boolean", "defaultValue": false }
+                }
+              ]
+            }
+          },
+          {
+            "addPrimaryKey": {
+              "tableName": "team_player",
+              "columnNames": "team_id, player_id"
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "team_player",
+              "baseColumnNames": "team_id",
+              "referencedTableName": "team",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_team_player_team"
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "team_player",
+              "baseColumnNames": "player_id",
+              "referencedTableName": "player",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_team_player_player"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "5",
+        "author": "azoulux",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "round",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "uuid",
+                    "defaultValueComputed": "gen_random_uuid()",
+                    "constraints": {
+                      "primaryKey": true,
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "game_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "status",
+                    "type": "varchar(20)",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "round",
+              "baseColumnNames": "game_id",
+              "referencedTableName": "game",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_round_game"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "5b",
+        "author": "azoulux",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "team_round_question",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "uuid",
+                    "defaultValueComputed": "gen_random_uuid()",
+                    "constraints": {
+                      "primaryKey": true,
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "round_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "team_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "question",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "correct_answer",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "team_round_question",
+              "baseColumnNames": "round_id",
+              "referencedTableName": "round",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_trq_round"
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "team_round_question",
+              "baseColumnNames": "team_id",
+              "referencedTableName": "team",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_trq_team"
+            }
+          },
+          {
+            "addUniqueConstraint": {
+              "tableName": "team_round_question",
+              "columnNames": "round_id,team_id",
+              "constraintName": "uk_trq_round_team"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "6",
+        "author": "azoulux",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "answer",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "uuid",
+                    "defaultValueComputed": "gen_random_uuid()",
+                    "constraints": {
+                      "primaryKey": true,
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "round_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "team_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "content",
+                    "type": "text",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "is_correct",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "answer",
+              "baseColumnNames": "round_id",
+              "referencedTableName": "round",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_answer_round"
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "answer",
+              "baseColumnNames": "team_id",
+              "referencedTableName": "team",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_answer_team"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "7",
+        "author": "azoulux",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "vote",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "uuid",
+                    "defaultValueComputed": "gen_random_uuid()",
+                    "constraints": {
+                      "primaryKey": true,
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "player_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "answer_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "round_id",
+                    "type": "uuid",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "voted_at",
+                    "type": "timestamp",
+                    "defaultValueComputed": "CURRENT_TIMESTAMP"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "vote",
+              "baseColumnNames": "player_id",
+              "referencedTableName": "player",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_vote_player"
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseTableName": "vote",
+              "baseColumnNames": "answer_id",
+              "referencedTableName": "answer",
+              "referencedColumnNames": "id",
+              "constraintName": "fk_vote_answer"
+            }
+          },
+            {
+                "addForeignKeyConstraint": {
+                "baseTableName": "vote",
+                "baseColumnNames": "round_id",
+                "referencedTableName": "round",
+                "referencedColumnNames": "id",
+                "constraintName": "fk_vote_round"
+                }
+            }
+        ]
+      }
+    }
+  ]
+}
